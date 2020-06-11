@@ -18,6 +18,7 @@ import {
   registryData
 } from '@salesforce/source-deploy-retrieve';
 import * as path from 'path';
+import { SourceClient } from '@salesforce/source-deploy-retrieve';
 import * as vscode from 'vscode';
 import { channelService } from '../channels';
 import { nls } from '../messages';
@@ -35,6 +36,12 @@ import {
 import { FilePathGatherer, SfdxCommandlet, SfdxWorkspaceChecker } from './util';
 import { LibraryCommandletExecutor } from './util/libraryCommandlet';
 import { useBetaDeployRetrieve } from './util/useBetaDeployRetrieve';
+import {
+  DeployRetrieveLibraryExecutor,
+  FilePathGatherer,
+  SfdxCommandlet,
+  SfdxWorkspaceChecker
+} from './util';
 
 export class ForceSourceDeploySourcePathExecutor extends BaseDeployExecutor {
   public build(sourcePath: string): Command {
@@ -127,9 +134,9 @@ export function useBetaRetrieve(explorerPath: vscode.Uri[]): boolean {
   return betaDeployRetrieve && supportedType;
 }
 
-export class LibraryDeploySourcePathExecutor extends LibraryCommandletExecutor<
-  string
-> {
+export class LibraryDeploySourcePathExecutor extends DeployRetrieveLibraryExecutor {
+  protected sourceClient: SourceClient | undefined;
+
   public async execute(response: ContinueResponse<string>): Promise<void> {
     this.setStartTime();
 
