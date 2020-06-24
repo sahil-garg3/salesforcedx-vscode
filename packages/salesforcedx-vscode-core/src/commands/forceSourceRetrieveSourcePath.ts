@@ -14,15 +14,10 @@ import {
   CancelResponse,
   ContinueResponse
 } from '@salesforce/salesforcedx-utils-vscode/out/src/types/index';
-import {
-  RegistryAccess,
-  registryData
-} from '@salesforce/source-deploy-retrieve';
 import * as vscode from 'vscode';
 import { channelService } from '../channels';
 import { nls } from '../messages';
 import { notificationService } from '../notifications';
-import { sfdxCoreSettings } from '../settings';
 import { SfdxPackageDirectories } from '../sfdxProject';
 import { telemetryService } from '../telemetry';
 import {
@@ -32,7 +27,6 @@ import {
   SfdxCommandletExecutor,
   SfdxWorkspaceChecker
 } from './util';
-import { LibraryCommandletExecutor } from './util/libraryCommandlet';
 import { useBetaDeployRetrieve } from './util/useBetaDeployRetrieve';
 
 export class ForceSourceRetrieveSourcePathExecutor extends SfdxCommandletExecutor<
@@ -114,9 +108,7 @@ export async function forceSourceRetrieveSourcePath(explorerPath: vscode.Uri) {
   await commandlet.run();
 }
 
-export class LibraryRetrieveSourcePathExecutor extends LibraryCommandletExecutor<
-  string
-> {
+export class LibraryRetrieveSourcePathExecutor extends DeployRetrieveLibraryExecutor {
   public async execute(response: ContinueResponse<string>): Promise<void> {
     this.setStartTime();
 

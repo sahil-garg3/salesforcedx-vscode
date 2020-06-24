@@ -13,35 +13,21 @@ import {
   ContinueResponse,
   ParametersGatherer
 } from '@salesforce/salesforcedx-utils-vscode/out/src/types';
-import {
-  RegistryAccess,
-  registryData
-} from '@salesforce/source-deploy-retrieve';
-import * as path from 'path';
-import { SourceClient } from '@salesforce/source-deploy-retrieve';
 import * as vscode from 'vscode';
 import { channelService } from '../channels';
 import { nls } from '../messages';
 import { notificationService } from '../notifications';
-import { DeployQueue, sfdxCoreSettings } from '../settings';
+import { DeployQueue } from '../settings';
 import { telemetryService } from '../telemetry';
 import { BaseDeployExecutor, DeployType } from './baseDeployCommand';
 import { SourcePathChecker } from './forceSourceRetrieveSourcePath';
-import {
-  APEX_CLASS_EXTENSION,
-  APEX_TRIGGER_EXTENSION,
-  VISUALFORCE_COMPONENT_EXTENSION,
-  VISUALFORCE_PAGE_EXTENSION
-} from './templates/metadataTypeConstants';
-import { FilePathGatherer, SfdxCommandlet, SfdxWorkspaceChecker } from './util';
-import { LibraryCommandletExecutor } from './util/libraryCommandlet';
-import { useBetaDeployRetrieve } from './util/useBetaDeployRetrieve';
 import {
   DeployRetrieveLibraryExecutor,
   FilePathGatherer,
   SfdxCommandlet,
   SfdxWorkspaceChecker
 } from './util';
+import { useBetaDeployRetrieve } from './util/useBetaDeployRetrieve';
 
 export class ForceSourceDeploySourcePathExecutor extends BaseDeployExecutor {
   public build(sourcePath: string): Command {
@@ -112,26 +98,6 @@ export async function forceSourceDeployMultipleSourcePaths(uris: vscode.Uri[]) {
       : new ForceSourceDeploySourcePathExecutor()
   );
   await commandlet.run();
-}
-
-// this supported types logic is temporary until we have a way of generating the metadata type from the path
-// once we have the metadata type we can check to see if it is a toolingsupportedtype from that util
-export function useBetaRetrieve(explorerPath: vscode.Uri[]): boolean {
-  if (explorerPath.length > 1) {
-    return false;
-  }
-  const filePath = explorerPath[0].fsPath;
-  const betaDeployRetrieve = sfdxCoreSettings.getBetaDeployRetrieve();
-  const supportedType = true;
-  /*path.extname(filePath) === APEX_CLASS_EXTENSION ||
-    filePath.includes(`${APEX_CLASS_EXTENSION}-meta.xml`) ||
-    (path.extname(filePath) === APEX_TRIGGER_EXTENSION ||
-      filePath.includes(`${APEX_TRIGGER_EXTENSION}-meta.xml`)) ||
-    (path.extname(filePath) === VISUALFORCE_COMPONENT_EXTENSION ||
-      filePath.includes(`${VISUALFORCE_COMPONENT_EXTENSION}-meta.xml`)) ||
-    (path.extname(filePath) === VISUALFORCE_PAGE_EXTENSION ||
-      filePath.includes(`${VISUALFORCE_PAGE_EXTENSION}-meta.xml`));*/
-  return betaDeployRetrieve && supportedType;
 }
 
 export class LibraryDeploySourcePathExecutor extends DeployRetrieveLibraryExecutor {
