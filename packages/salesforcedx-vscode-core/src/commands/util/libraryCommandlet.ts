@@ -4,11 +4,8 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { Connection } from '@salesforce/core';
 import { ContinueResponse } from '@salesforce/salesforcedx-utils-vscode/out/src/types';
-import { nls } from '../../messages';
 import { TelemetryData, telemetryService } from '../../telemetry';
-import { OrgAuthInfo } from '../../util';
 import { CommandletExecutor } from './sfdxCommandlet';
 
 export abstract class LibraryCommandletExecutor<T>
@@ -18,9 +15,12 @@ export abstract class LibraryCommandletExecutor<T>
   protected startTime: [number, number] | undefined;
   protected telemetryName: string | undefined;
 
-  public build(execName: string, telemetryLogName: string) {}
+  public async build(
+    execName: string,
+    telemetryLogName: string
+  ): Promise<void> {}
 
-  public execute(response: ContinueResponse<T>): void {}
+  public async execute(response: ContinueResponse<T>): Promise<void> {}
 
   public logMetric() {
     telemetryService.sendCommandEvent(this.telemetryName, this.startTime);
