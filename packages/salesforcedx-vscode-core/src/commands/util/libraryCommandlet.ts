@@ -37,13 +37,4 @@ export abstract class LibraryCommandletExecutor<T>
   ): TelemetryData | undefined {
     return;
   }
-
-  public async initalizeConnection(): Promise<Connection> {
-    const usernameOrAlias = await OrgAuthInfo.getDefaultUsernameOrAlias(true);
-    if (!usernameOrAlias) {
-      throw new Error(nls.localize('error_no_default_username'));
-    }
-    const conn = await OrgAuthInfo.getConnection(usernameOrAlias);
-    return conn;
-  }
 }
